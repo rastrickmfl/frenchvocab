@@ -1,0 +1,9 @@
+{
+  "name": "gcse-french-vocab-audit",
+  "version": "2.0.0",
+  "private": true,
+  "description": "GCSE French vocab pupil web app with pupil accounts backed by Netlify Blobs.",
+  "dependencies": {
+    "@netlify/blobs": "^10.7.13"
+  }
+}

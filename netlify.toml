@@ -1,0 +1,6 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[functions."state"]
+  included_files = ["netlify/functions/accounts.json"]
