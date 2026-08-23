@@ -2783,13 +2783,13 @@ function logOut(){
   route = {name:"home", param:null};
   myTeacherListsUi = {lists: null, loading: false, error: null};
   TEACHER_WORD = {};
-  vocabOpenCategory = "aqa";
+  vocabOpenCategory = null;
   currentTeacherListId = null;
   render();
   window.scrollTo(0,0);
 }
 
-var vocabOpenCategory = "aqa"; // "aqa" | "teacher" | "personal" | null — which Vocab-screen category is expanded
+var vocabOpenCategory = null; // "aqa" | "teacher" | "personal" | null — which Vocab-screen category is expanded; all start condensed
 function renderHome(){
   titleEl.textContent = "GCSE French Vocab Audit";
 
@@ -2900,17 +2900,25 @@ function renderHome(){
     state.personalLists.forEach(function(l){ pwCount += (l.words||[]).length; });
     var myVocabSub = state.personalLists.length===0
       ? "0 sets"
-      : state.personalLists.length+' set'+(state.personalLists.length===1?'':'s')+' &middot; '+pwCount+' word'+(pwCount===1?'':'s');
+      : state.personalLists.length+' set'+(state.personalLists.length===1?'':'s')+' · '+pwCount+' word'+(pwCount===1?'':'s');
     normalWrap.appendChild(categoryHeader("personal", "My personal vocabulary lists", myVocabSub));
     if(vocabOpenCategory === "personal"){
       var personalWrap = el('<div style="margin:6px 0 16px;"></div>');
       normalWrap.appendChild(personalWrap);
-      var myVocabTileSub = state.personalLists.length===0
-        ? "Create your own vocab sets, or import one a friend shared with you"
-        : "Open to view, edit or add sets";
-      var myVocabTile = el('<div class="tile"><div><div>&#9998; My vocabulary</div><div class="sub">'+esc(myVocabTileSub)+'</div></div><div class="chev">&rsaquo;</div></div>');
-      myVocabTile.addEventListener("click", function(){ myVocab = {mode:"landing", setId:null}; go("personal", null); });
-      personalWrap.appendChild(myVocabTile);
+      if(state.personalLists.length===0){
+        var myVocabTile = el('<div class="tile"><div><div>&#9998; My vocabulary</div><div class="sub">Create your own vocab sets, or import one a friend shared with you</div></div><div class="chev">&rsaquo;</div></div>');
+        myVocabTile.addEventListener("click", function(){ myVocab = {mode:"landing", setId:null}; go("personal", null); });
+        personalWrap.appendChild(myVocabTile);
+      } else {
+        state.personalLists.slice().sort(function(a,b){ return (b.id||0) - (a.id||0); }).forEach(function(list){
+          var t = el('<div class="tile"><div><div>'+esc(list.name)+'</div><div class="sub">'+fmtListDate(list.date)+' · '+list.words.length+' word'+(list.words.length===1?'':'s')+'</div></div><div class="chev">&rsaquo;</div></div>');
+          t.addEventListener("click", function(){ myVocab = {mode:"view", setId:list.id}; go("personal", null); });
+          personalWrap.appendChild(t);
+        });
+        var manageTile = el('<div class="tile"><div><div>&#9998; Create or manage sets</div><div class="sub">Add a new set, or import one a friend shared with you</div></div><div class="chev">&rsaquo;</div></div>');
+        manageTile.addEventListener("click", function(){ myVocab = {mode:"landing", setId:null}; go("personal", null); });
+        personalWrap.appendChild(manageTile);
+      }
     }
   }
   buildNormal();
