@@ -28219,11 +28219,16 @@ function renderSync(){
       '<p class="muted" style="margin-top:6px;">Manage classes/rosters and vocab lists below. Vocab lists can be targeted to classes or individual pupils, but pupils won\'t see them yet — that arrives with the bigger Vocab section rework. Pupil analytics is also coming in a future round.</p></div>'
     );
     app.appendChild(teacherCard);
-    var manageClassesBtn = el('<button class="btn" style="margin-top:8px;">Manage classes</button>');
-    teacherCard.appendChild(manageClassesBtn);
+    var teacherBtnRow = el(
+      '<div class="btn-row" style="margin-top:8px;">'+
+        '<button class="btn">Manage classes</button>'+
+        '<button class="btn">Manage vocab lists</button>'+
+      '</div>'
+    );
+    teacherCard.appendChild(teacherBtnRow);
+    var manageClassesBtn = teacherBtnRow.children[0];
+    var manageListsBtn = teacherBtnRow.children[1];
     manageClassesBtn.addEventListener("click", function(){ enterClassesScreen(); });
-    var manageListsBtn = el('<button class="btn" style="margin-top:8px; margin-left:8px;">Manage vocab lists</button>');
-    teacherCard.appendChild(manageListsBtn);
     manageListsBtn.addEventListener("click", function(){ enterTeacherListsScreen(); });
     app.appendChild(el('<div style="height:12px;"></div>'));
   }
