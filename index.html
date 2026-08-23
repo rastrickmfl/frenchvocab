@@ -4259,6 +4259,7 @@ function loadMyTeacherLists(onReady){
     if(onReady) onReady();
   }).catch(function(e){
     myTeacherListsUi.loading = false;
+    myTeacherListsUi.lists = []; // stops the "lists === null" check above from re-triggering an endless retry loop
     myTeacherListsUi.error = "Couldn't check for shared vocab lists — check you're online and try again.";
     if(onReady) onReady();
   });
